@@ -1,9 +1,7 @@
 import React, { useState } from 'react'
 import { useEffect } from 'react'
 
-const mainurl = 'https://restcountries.com/v3.1/all'
-const searchurl = 'https://restcountries.com/v3.1/name/'
-const regionsearch = 'https://restcountries.com/v3.1/region/'
+const url = 'https://restcountries.com/v3.1/all'
 
 function App() {
   const [info, setInfo] = useState([])
@@ -11,33 +9,18 @@ function App() {
   const [theme, setTheme] = useState(true)
   const [loading, setLoading] = useState(true)
   const [filterparams, setFilterparams] = useState('')
-  const [latest, setLatest] = useState([])
-  // const changeColor = () => {
-  //   if (theme === 'light-theme') {
-  //     setTheme('dark-theme')
-  //   } else {
-  //     setTheme('light-theme')
-  //   }
-  // }
-  // document.documentElement.className = theme
+  const [allData, setAllData] = useState([])
+  const [filterCont, setFilteredCont] = useState([])
+
   const changeColor = () => {
     setTheme(!theme)
   }
   const fetchCountry = async () => {
-    let url
-    if (filterparams) {
-      url = `${regionsearch}${filterparams}`
-    } else if (query) {
-      //  url = `${searchurl}${query}`
-      console.log(query, info)
-    } else {
-      url = `${mainurl}`
-    }
     try {
       const resposne = await fetch(url)
       const data = await resposne.json()
-
       setInfo(data)
+      setAllData(data)
       setLoading(false)
     } catch (error) {
       console.log(error)
@@ -45,19 +28,37 @@ function App() {
   }
   useEffect(() => {
     fetchCountry()
-  }, [info, theme, filterparams, query])
+  }, [])
 
-  // const combineSearch = (info) => {
-  //   if (query !== '' && filterparams !== '') {
-  //     const filteredData = info.filter((item) => {
-  //       return Object.values(item)
-  //         .join('')
-  //         .toLowerCase()
-  //         .includes(query.toLowerCase())
-  //     })
-  //     setLatest(filteredData)
-  //     console.log(latest)
-  //   }
+  const fetchSearch = (value, arrayDatas) => {
+    let newCountry = arrayDatas.filter((item) =>
+      item.name.common.toLowerCase().includes(value.toLowerCase())
+    )
+    setInfo(newCountry)
+  }
+  useEffect(() => {
+    if (query && filterparams) {
+      return fetchSearch(query, filterCont)
+    }
+    if (query) {
+      fetchSearch(query, allData)
+    }
+  }, [query, filterparams])
+
+  const fetchCont = (value) => {
+    let newCont = allData.filter(
+      (item) => item.region.toLowerCase() === value.toLowerCase()
+    )
+    setInfo(newCont)
+    setFilteredCont(newCont)
+  }
+  useEffect(() => {
+    if (filterparams) {
+      fetchCont(filterparams)
+    } else {
+      setFilteredCont([])
+    }
+  }, [filterparams])
 
   return (
     <main className={`${theme ? 'white-theme' : 'dark-theme'} `}>
@@ -83,9 +84,6 @@ function App() {
             />
           </form>
           <div>
-            {/* <DropdownExampleSearchSelection /> */}
-            {/* <h4>Filter by region</h4>
-            <AiFillCaretDown className='icon' /> */}
             <select
               type='text'
               placeholder='Filter Countries By Region'
@@ -93,23 +91,13 @@ function App() {
               onChange={(e) => setFilterparams(e.target.value)}
               className='dropdown'
             >
-              <option value=''>Filter by continent</option>
+              <option value='all'>Filter by continent</option>
               <option value='Africa'>Africa</option>
-              <option value='America'>America</option>
+              <option value='Americas'>America</option>
               <option value='Asia'>Asia</option>
               <option value='Europe'>Europe</option>
               <option value='Oceania'>Oceania</option>
             </select>
-            {/* <select className='dropdown'>
-              <option selected value='filter'>
-                Filter by continent
-              </option>
-              <option value='Africa'>Africa</option>
-              <option value='America'>America</option>
-              <option value='Asia'>Asia</option>
-              <option value='Europe'>Europe</option>
-              <option value='Oceania'>Oceania</option>
-            </select> */}
           </div>
         </div>
       </section>
@@ -118,29 +106,32 @@ function App() {
         <div className={`${loading ? 'loader' : ''} `}></div>
         <div className='cards'>
           {info.length > 0 ? (
-            info.map((item, i) => {
-              const { name, capital, region, population, flags } = item
+            info
+              .sort((a, b) => (a.name.common > b.name.common ? 1 : -1))
+              .map((item, i) => {
+                const { name, capital, region, population, flags } = item
 
-              return (
-                <div className='card' key={i}>
-                  <div className='card-image'>
-                    <img src={flags.png} alt='flag' className='flag' />
+                return (
+                  <div className='card' key={i}>
+                    <div className='card-image'>
+                      <img src={flags.png} alt='flag' className='flag' />
+                    </div>
+                    <div className='card-info'>
+                      <h2>{name.common}</h2>
+                      <p>
+                        Popultion:{' '}
+                        <span className='text-span'>{population}</span>
+                      </p>
+                      <p>
+                        region:<span className='text-span'>{region}</span>
+                      </p>
+                      <p>
+                        capital:<span className='text-span'>{capital}</span>
+                      </p>
+                    </div>
                   </div>
-                  <div className='card-info'>
-                    <h2>{name.common}</h2>
-                    <p>
-                      Popultion: <span className='text-span'>{population}</span>
-                    </p>
-                    <p>
-                      region:<span className='text-span'>{region}</span>
-                    </p>
-                    <p>
-                      capital:<span className='text-span'>{capital}</span>
-                    </p>
-                  </div>
-                </div>
-              )
-            })
+                )
+              })
           ) : (
             <h1 className={`${loading ? 'error hide' : 'error'} `}>
               No country found
