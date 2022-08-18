@@ -24,31 +24,12 @@ const singlecountry = (i) => {
   useEffect(() => {
     hello()
   }, [name])
-  // const {
-  //   population,
-  //   flags,
-  //   region,
-  //   subregion,
-  //   capital,
-  //   currencies,
-  //   languages,
-  //   borders,
-  // } = loadDatas
-  // console.log(population)
+
   return (
     <div className='main-div section'>
       {loadData.map((item) => {
-        const {
-          name,
-          population,
-          flags,
-          region,
-          subregion,
-          capital,
-          currencies,
-          languages,
-          borders,
-        } = item
+        const { name, population, flags, region, subregion, capital, borders } =
+          item
         console.log(item)
         return (
           <div className='display-content'>
