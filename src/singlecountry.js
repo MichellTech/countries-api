@@ -68,6 +68,9 @@ const singlecountry = (i) => {
                 Border Countries:
                 <span className='text-span'>{borders[1]}</span>
               </p>
+              <Link to='/' className='back-btn'>
+                All Countries
+              </Link>
             </div>
           </div>
         )

@@ -428,7 +428,7 @@ input::placeholder {
 .display-image {
   width: 70vw;
   max-width: 300px;
-  height: 200px;
+  height: 230px;
 }
 
 .flagging {
@@ -446,7 +446,7 @@ input::placeholder {
   line-height: 30px;
 }
 .display-info p {
-  margin-bottom: 0.2rem;
+  margin-bottom: 0.3rem;
   color: #202c37;
   font-weight: 700;
 }
@@ -467,4 +467,11 @@ input::placeholder {
     line-height: 0px;
     padding-bottom: 2rem;
   }
+}
+.back-btn {
+  background-color: #202c37;
+  color: white;
+  padding: 0.3rem 0.5rem;
+  font-weight: 700;
+  border-radius: var(--radius);
 }

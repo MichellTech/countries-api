@@ -30,7 +30,7 @@ function App() {
   useEffect(() => {
     fetchCountry()
   }, [])
-
+  //for search , search and filter
   const fetchSearch = (value, arrayDatas) => {
     let newCountry = arrayDatas.filter((item) =>
       item.name.common.toLowerCase().includes(value.toLowerCase())
@@ -44,8 +44,12 @@ function App() {
     if (query) {
       fetchSearch(query, allData)
     }
+    if (filterparams === '') {
+      fetchSearch('', allData)
+    }
   }, [query, filterparams])
 
+  //fiter alone
   const fetchCont = (value) => {
     let newCont = allData.filter(
       (item) => item.region.toLowerCase() === value.toLowerCase()
@@ -92,7 +96,7 @@ function App() {
               onChange={(e) => setFilterparams(e.target.value)}
               className='dropdown'
             >
-              <option value='all'>Filter by continent</option>
+              <option value=''>Filter by continent</option>
               <option value='Africa'>Africa</option>
               <option value='Americas'>America</option>
               <option value='Asia'>Asia</option>
