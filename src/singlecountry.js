@@ -4,7 +4,7 @@ import { useEffect } from 'react'
 import flag from './images/flag.jpg'
 const endpoint = 'https://restcountries.com/v3.1/name/'
 
-const singlecountry = (i) => {
+const Singlecountry = (i) => {
   const [loadData, setLoadData] = useState([])
   const { name } = useParams()
 
@@ -78,4 +78,4 @@ const singlecountry = (i) => {
     </div>
   )
 }
-export default singlecountry
+export default Singlecountry
