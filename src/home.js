@@ -44,9 +44,9 @@ function App() {
     if (query) {
       fetchSearch(query, allData)
     }
-    if (filterparams === '') {
-      fetchSearch('', allData)
-    }
+    // if (filterparams === '') {
+    //   fetchSearch('', allData)
+    // }
   }, [query, filterparams])
 
   //fiter alone
@@ -54,6 +54,7 @@ function App() {
     let newCont = allData.filter(
       (item) => item.region.toLowerCase() === value.toLowerCase()
     )
+
     setInfo(newCont)
     setFilteredCont(newCont)
   }
@@ -61,6 +62,7 @@ function App() {
     if (filterparams) {
       fetchCont(filterparams)
     } else {
+      setInfo(allData)
       setFilteredCont([])
     }
   }, [filterparams])
